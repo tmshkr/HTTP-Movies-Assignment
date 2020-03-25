@@ -1,29 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Button, FormGroup, Label } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 
 function UpdateMovie(props) {
-  const { movies } = props;
+  const { movies, getMovieList } = props;
   const { handleSubmit, register, errors, setError, setValue } = useForm();
   const history = useHistory();
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
-      const found = movies.find(m => m.id === Number(id));
+      let found = movies.find(m => m.id === Number(id));
       if (found) {
+        found = { ...found };
+        found.stars = found.stars.join(", ");
         const values = [];
         for (let key in found) {
           values.push({ [key]: found[key] });
         }
+        console.log(values);
         setValue(values);
       }
     }
   }, [movies]);
 
+  const updateMovie = (id, values) => {
+    values.stars = values.stars.split(",").map(s => s.trim());
+    axios
+      .put(`http://localhost:5000/api/movies/${id}`, {
+        id: Number(id),
+        ...values
+      })
+      .then(res => {
+        console.log(res);
+        getMovieList();
+        history.push("/");
+      })
+      .catch(err => console.dir(err));
+  };
+
   const onSubmit = values => {
-    console.log(values);
+    id ? updateMovie(id, values) : console.log(values);
   };
 
   return (
@@ -55,6 +74,19 @@ function UpdateMovie(props) {
         <span className="error">{errors.age && errors.age.message}</span>
       </FormGroup>
       <FormGroup>
+        <Label for="stars">Stars</Label>
+        <input
+          className="form-control"
+          type="text"
+          name="stars"
+          id="stars"
+          ref={register({
+            required: "Required"
+          })}
+        />
+        <span className="error">{errors.age && errors.age.message}</span>
+      </FormGroup>
+      <FormGroup>
         <Label for="metascore">Metascore</Label>
         <input
           className="form-control"
@@ -68,7 +100,7 @@ function UpdateMovie(props) {
         <span className="error">{errors.height && errors.height.message}</span>
       </FormGroup>
       <Button type="submit" color="primary" size="lg" block>
-        {id ? "Edit Movie" : "Create Movie"}
+        {id ? "Edit Movie" : "Add Movie"}
       </Button>
       <span className="error">
         {errors.response && errors.response.message}
