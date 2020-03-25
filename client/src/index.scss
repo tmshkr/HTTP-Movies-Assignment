@@ -1,4 +1,6 @@
 @import "~bootstrap";
+@import "App";
+@import "Movies/Movie";
 
 body {
   margin: 0;
@@ -32,7 +34,7 @@ body {
   cursor: pointer;
   position: relative;
   margin: 1rem auto;
-  width: 75%;
+  max-width: 900px;
   display: flex;
   align-items: center;
   justify-content: space-between;
