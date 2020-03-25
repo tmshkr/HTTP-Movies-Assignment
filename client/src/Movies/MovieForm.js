@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button, FormGroup, Label } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 
-function UpdateMovie(props) {
+function MovieForm(props) {
   const { movies, getMovieList } = props;
   const { handleSubmit, register, errors, setError, setValue } = useForm();
   const history = useHistory();
@@ -109,4 +109,4 @@ function UpdateMovie(props) {
   );
 }
 
-export default UpdateMovie;
+export default MovieForm;
