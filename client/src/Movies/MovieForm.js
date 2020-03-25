@@ -26,8 +26,21 @@ function MovieForm(props) {
     }
   }, [movies]);
 
+  const addMovie = values => {
+    values.stars.includes(",")
+      ? (values.stars = values.stars.split(",").map(s => s.trim()))
+      : (values.stars = [values.stars]);
+
+    axios.post("http://localhost:5000/api/movies", values).then(res => {
+      getMovieList();
+      history.push("/");
+    });
+  };
+
   const updateMovie = (id, values) => {
-    values.stars = values.stars.split(",").map(s => s.trim());
+    values.stars.includes(",")
+      ? (values.stars = values.stars.split(",").map(s => s.trim()))
+      : (values.stars = [values.stars]);
     axios
       .put(`http://localhost:5000/api/movies/${id}`, {
         id: Number(id),
@@ -42,7 +55,7 @@ function MovieForm(props) {
   };
 
   const onSubmit = values => {
-    id ? updateMovie(id, values) : console.log(values);
+    id ? updateMovie(id, values) : addMovie(values);
   };
 
   return (
