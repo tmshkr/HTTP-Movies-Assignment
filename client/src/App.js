@@ -19,7 +19,9 @@ const App = () => {
   };
 
   const addToSavedList = movie => {
-    setSavedList([...savedList, movie]);
+    if (!savedList.find(m => m.id === movie.id)) {
+      setSavedList([...savedList, movie]);
+    }
   };
 
   useEffect(() => {
@@ -30,19 +32,20 @@ const App = () => {
     <>
       <SavedList list={savedList} />
 
-      <Route exact path="/">
-        <MovieList movies={movieList} />
-      </Route>
-
-      <Route path="/movies/:id">
-        <Movie addToSavedList={addToSavedList} getMovieList={getMovieList} />
-      </Route>
-      <Route path="/update-movie/:id">
-        <MovieForm movies={movieList} getMovieList={getMovieList} />
-      </Route>
-      <Route path="/add-movie">
-        <MovieForm movies={movieList} getMovieList={getMovieList} />
-      </Route>
+      <main className="app">
+        <Route exact path="/">
+          <MovieList movies={movieList} />
+        </Route>
+        <Route path="/movies/:id">
+          <Movie addToSavedList={addToSavedList} getMovieList={getMovieList} />
+        </Route>
+        <Route path="/update-movie/:id">
+          <MovieForm movies={movieList} getMovieList={getMovieList} />
+        </Route>
+        <Route path="/add-movie">
+          <MovieForm movies={movieList} getMovieList={getMovieList} />
+        </Route>
+      </main>
     </>
   );
 };
